@@ -12,6 +12,8 @@ import { pinDetailMorePinQuery, pinDetailQuery } from "../utils/data";
 
 import { Spinner } from "./Spinner";
 
+import { useTranslation } from "react-i18next";
+
 export const PinDetail = ({ user }) => {
   const [pins, setPins] = useState(null);
   const [pinDetail, setPinDetail] = useState(null);
@@ -19,6 +21,8 @@ export const PinDetail = ({ user }) => {
   const [addingComment, setAddingComment] = useState(false);
 
   const { pinId } = useParams();
+
+  const { t } = useTranslation();
 
   const fetchPinDetails = () => {
     let query = pinDetailQuery(pinId);
@@ -65,7 +69,7 @@ export const PinDetail = ({ user }) => {
     }
   };
 
-  if (!pinDetail) return <Spinner message="Carregando..." />;
+  if (!pinDetail) return <Spinner message={t("LoadingMessage.text")} />;
   return (
     <>
       <div className="flex xl:flex-row flex-col m-auto bg-white max-w-[1500px] rounded-[32px] ">
@@ -101,7 +105,7 @@ export const PinDetail = ({ user }) => {
               <p className="mt-3">{pinDetail.about}</p>
             </div>
             <Link
-              to={`user-profile/${pinDetail.postedBy?._id}`}
+              to={`/user-profile/${pinDetail.postedBy?._id}`}
               className="flex gap-2 mt-5 items-center bg-white rounded-lg"
             >
               <img
@@ -113,7 +117,7 @@ export const PinDetail = ({ user }) => {
                 {pinDetail.postedBy?.userName}
               </p>
             </Link>
-            <h2 className="mt-5 text-2xl">Comments</h2>
+            <h2 className="mt-5 text-2xl">{t("PinComments.text")}</h2>
             <div className="max-h-370 overflow-y-auto">
               {pinDetail?.comments?.map((comment, i) => (
                 <div
@@ -133,7 +137,7 @@ export const PinDetail = ({ user }) => {
               ))}
             </div>
             <div className="flex flex-wrap mt-6 gap-3">
-              <Link to={`user-profile/${pinDetail.postedBy?._id}`}>
+              <Link to={`/user-profile/${pinDetail.postedBy?._id}`}>
                 <img
                   className="w-10 h-10 rounded-full cursor-pointer"
                   src={pinDetail.postedBy?.image}
@@ -143,7 +147,7 @@ export const PinDetail = ({ user }) => {
               <input
                 className="flex-1 border-gray-100 outline-none border-2 p-2 rounded-2xl focus:border-gray-300"
                 type="text"
-                placeholder="Adicione um comentário"
+                placeholder={t("PinCommentAddPlaceholder.text")}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               />
@@ -152,20 +156,23 @@ export const PinDetail = ({ user }) => {
                 className="bg-red-500 text-white rounded-full px-6 py-2 font-semibold font-base outline-none"
                 onClick={addComment}
               >
-                {addingComment ? "Adicionando comentário..." : "Add"}
+                {addingComment
+                  ? t("PinCommentAddButton.firstText")
+                  : t("PinCommentAddButton.secondText")}
               </button>
             </div>
           </div>
         </div>
       </div>
-      {console.log(pins)}
       {pins?.length > 0 ? (
         <>
-          <h2 className="font-bold text-center text-2xl mt-8 mb-4">Mais...</h2>
+          <h2 className="font-bold text-center text-2xl mt-8 mb-4">
+            {t("PinFooterMsg.text")}
+          </h2>
           <MasonryLayout pins={pins} />
         </>
       ) : (
-        <Spinner message="carregando mais..." />
+        <Spinner message={t("PinFooterMsg.textMore")} />
       )}
     </>
   );

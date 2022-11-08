@@ -9,13 +9,16 @@ import { BsFillArrowUpRightCircleFill } from "react-icons/bs";
 
 import { urlFor, client } from "../lib/sanityClient";
 import { fetchUser } from "../utils/fetchUser";
+import { useAuthStore } from "../store/authStore";
+import { useTranslation } from "react-i18next";
 
 export const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
   const [postHovered, setPostHovered] = useState(false);
+  const { userProfile: user } = useAuthStore();
 
   const navigate = useNavigate();
 
-  const user = fetchUser();
+  //const user = fetchUser();
 
   const alreadySaved = !!save?.filter((item) => item.postedBy._id === user.sub)
     ?.length;
@@ -51,6 +54,8 @@ export const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
       window.location.reload();
     });
   };
+
+  const { t } = useTranslation();
 
   return (
     <div className="m-2">
@@ -94,7 +99,7 @@ export const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
                   type="button"
                   className="bg-red-500 opacity-50 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none "
                 >
-                  Save
+                  {t("PinButton.text")}
                 </button>
               )}
             </div>

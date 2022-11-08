@@ -6,25 +6,27 @@ import decode from "jwt-decode";
 
 import shareVideo from "../assets/share.mp4";
 import logo from "../assets/logowhite.png";
+import { useAuthStore } from "../store/authStore";
 
 export const Login = () => {
   const navigate = useNavigate();
 
+  const { userProfile, addUser } = useAuthStore();
+
   const responseGoogle = (response) => {
     const token = decode(response.credential);
-
-    localStorage.setItem("user", JSON.stringify(token));
-
     const { picture, sub, given_name: name } = token;
 
-    const doc = {
+    const user = {
       _id: sub,
       _type: "user",
       userName: name,
       image: picture,
     };
 
-    client.createIfNotExists(doc).then(() => {
+    addUser(user);
+
+    client.createIfNotExists(user).then(() => {
       navigate("/", { replace: true });
     });
 

@@ -10,17 +10,20 @@ import { Sidebar, UserProfile } from "../components";
 import Pins from "./Pins";
 import { userQuery } from "../utils/data";
 import { fetchUser } from "../utils/fetchUser";
+import { useAuthStore } from "../store/authStore";
 
 const Home = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [user, setUser] = useState(null);
 
+  const { userProfile: userInfo } = useAuthStore();
+
   const scrollRef = useRef();
 
-  const userInfo = fetchUser();
+  //const userInfo = fetchUser();
 
   useEffect(() => {
-    const query = userQuery(userInfo?.sub);
+    const query = userQuery(userInfo?._id);
 
     client.fetch(query).then((data) => {
       setUser(data[0]);
